@@ -4,7 +4,7 @@
 
 <!-- MDOC !-->
 
-`HSL` is a simple and fast library for parsing and building HSL manifests.
+`HLS` is a simple and fast library for parsing and building HLS manifests.
 
 ## Examples
 
