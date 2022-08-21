@@ -25,9 +25,12 @@ defmodule Hls.MixProject do
 
   defp package do
     %{
-      licenses: [""],
+      licenses: ["Apache-2.0"],
       maintainers: ["Cade Ward"],
-      links: %{"GitHub" => @url}
+      links: %{
+        "GitHub" => @url,
+        "Changelog" => "#{@url}/blob/master/CHANGELOG.md"
+      }
     }
   end
 
