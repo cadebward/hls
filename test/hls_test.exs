@@ -242,4 +242,25 @@ defmodule HLSTest do
     assert segment.duration == 8.0
     assert segment.uri == "The_Chosen_S01E01_audio_spa_20211108_134000/0000.ts"
   end
+
+  test "parses and rebuilds a basic master playlist" do
+    master_playlist = """
+    #EXTM3U
+    #EXT-X-VERSION:7
+    #EXT-X-INDEPENDENT-SEGMENTS
+    #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=240000,RESOLUTION=396x224
+    media.m3u8
+    """
+
+    result = HLS.parse(master_playlist)
+    assert result.type == :master
+    assert result.version == 7
+    assert result.target_duration == nil
+    assert result.media_sequence == nil
+    assert result.discontinuity_sequence == nil
+    assert result.independent_segments == true
+
+    m3u8 = HLS.serialize(result)
+    assert m3u8 == master_playlist
+  end
 end
