@@ -2,6 +2,12 @@ defmodule HLSTest do
   use ExUnit.Case
   doctest HLS
 
+  defp trim_manifest(string) do
+    string
+    |> String.replace("\n\n", "\n")
+    |> String.trim()
+  end
+
   test "basic master playlist" do
     master_playlist = """
     #EXTM3U
@@ -105,7 +111,7 @@ defmodule HLSTest do
 
     variant = hd(result.variants)
     assert variant.average_bandwidth == nil
-    assert variant.bandwidth == "240000"
+    assert variant.bandwidth == 240_000
     assert variant.codecs == nil
     assert variant.resolution == "396x224"
     assert variant.uri == "media.m3u8"
@@ -123,14 +129,14 @@ defmodule HLSTest do
 
     variant = Enum.at(result.variants, 0)
     assert variant.average_bandwidth == nil
-    assert variant.bandwidth == "240000"
+    assert variant.bandwidth == 240_000
     assert variant.codecs == nil
     assert variant.resolution == "396x224"
     assert variant.uri == "media.m3u8"
 
     variant = Enum.at(result.variants, 1)
     assert variant.average_bandwidth == nil
-    assert variant.bandwidth == "240000"
+    assert variant.bandwidth == 240_000
     assert variant.codecs == nil
     assert variant.resolution == "396x224"
     assert variant.uri == "media.m3u8"
@@ -151,14 +157,14 @@ defmodule HLSTest do
     assert Enum.count(result.variants) == 1
     variant = hd(result.variants)
     assert variant.average_bandwidth == nil
-    assert variant.bandwidth == "739200"
+    assert variant.bandwidth == 739_200
     assert variant.resolution == "480x270"
     assert variant.codecs == "avc1.640015,mp4a.40.2"
 
     assert Enum.count(result.audio_renditions) == 1
     audio = hd(result.audio_renditions)
     assert audio.autoselect == true
-    assert audio.default == true
+    assert audio.default == false
     assert audio.forced == false
     assert audio.group_id == "aud"
     assert audio.language == "spa"
@@ -169,8 +175,8 @@ defmodule HLSTest do
     assert Enum.count(result.subtitle_renditions) == 1
     sub = hd(result.subtitle_renditions)
     assert sub.autoselect == true
-    assert sub.default == true
-    assert sub.forced == true
+    assert sub.default == false
+    assert sub.forced == false
     assert sub.group_id == "subs"
     assert sub.language == "en"
     assert sub.name == "English"
@@ -248,7 +254,7 @@ defmodule HLSTest do
     #EXTM3U
     #EXT-X-VERSION:7
     #EXT-X-INDEPENDENT-SEGMENTS
-    #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=240000,RESOLUTION=396x224
+    #EXT-X-STREAM-INF:BANDWIDTH=240000,RESOLUTION=396x224
     media.m3u8
     """
 
@@ -261,6 +267,23 @@ defmodule HLSTest do
     assert result.independent_segments == true
 
     m3u8 = HLS.serialize(result)
-    assert m3u8 == master_playlist
+    assert trim_manifest(m3u8) == trim_manifest(master_playlist)
+  end
+
+  test "parses and rebuilds vod manifest" do
+    playlist = """
+    #EXTM3U
+    #EXT-X-VERSION:3
+    #EXT-X-STREAM-INF:BANDWIDTH=739200,CODECS="avc1.640015,mp4a.40.2",RESOLUTION=480x270,AUDIO="aud",SUBTITLES="subs"
+    video/CHO_EP101_Angel-thechosen_270p.m3u8
+    #EXT-X-MEDIA:TYPE=AUDIO,URI="audio/spa/The_Chosen_S01E01_audio_spa_20211108_134000.m3u8",GROUP-ID="aud",LANGUAGE="spa",NAME="Spanish",DEFAULT=NO,AUTOSELECT=YES,FORCED=NO
+    #EXT-X-MEDIA:TYPE=SUBTITLES,URI="subtitles/eng/The_Chosen_S01E01_eng.m3u8",GROUP-ID="subs",LANGUAGE="en",NAME="English",DEFAULT=NO,AUTOSELECT=YES,FORCED=NO
+    """
+
+    result = HLS.parse(playlist)
+    assert Enum.count(result.variants) == 1
+
+    m3u8 = HLS.serialize(result)
+    assert trim_manifest(m3u8) == trim_manifest(playlist)
   end
 end
