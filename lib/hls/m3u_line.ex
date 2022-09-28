@@ -89,8 +89,14 @@ defmodule HLS.M3ULine do
   while ensuring the result is a boolean.
   """
   def get_boolean_attribute(%__MODULE__{} = line, key) do
-    !!find_attribute(line, key)
+    line
+    |> find_attribute(key)
+    |> to_boolean()
   end
+
+  defp to_boolean("NO"), do: false
+  defp to_boolean("YES"), do: true
+  defp to_boolean(_), do: false
 
   @doc """
   Retrieves the value of the given key from the M3ULine's attributes
@@ -98,11 +104,26 @@ defmodule HLS.M3ULine do
   """
   def get_float_attribute(%__MODULE__{} = line, key) do
     case find_attribute(line, key) do
-      nil -> 0
+      nil -> 0.0
       value -> Float.parse(value)
     end
     |> case do
       {float, _remainder} -> float
+      _error_or_zero -> 0.0
+    end
+  end
+
+  @doc """
+  Retrieves the value of the given key from the M3ULine's attributes
+  while ensuring the result is an integer
+  """
+  def get_integer_attribute(%__MODULE__{} = line, key) do
+    case find_attribute(line, key) do
+      nil -> 0
+      value -> Integer.parse(value)
+    end
+    |> case do
+      {int, _remainder} -> int
       _error_or_zero -> 0
     end
   end

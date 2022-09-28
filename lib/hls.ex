@@ -25,4 +25,11 @@ defmodule HLS do
   defp comment?("#"), do: true
   defp comment?("# " <> _rest), do: true
   defp comment?(_other), do: false
+
+  @doc """
+  Turns a Manifest struct into its m3u8 text representation.
+  """
+  def serialize(%HLS.Manifest{} = manifest) do
+    HLS.Serializer.run(manifest)
+  end
 end

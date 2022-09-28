@@ -1,0 +1,5 @@
+<%= insert_header(@manifest) %>
+<%= insert_variant_streams(@manifest) %>
+<%= insert_audio_renditions(@manifest) %>
+<%= insert_subtitle_renditions(@manifest) %>
+<%= insert_end_tag(@manifest) %>

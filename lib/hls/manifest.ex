@@ -56,7 +56,7 @@ defmodule HLS.Manifest do
     %{manifest | variants: variants}
   end
 
-  defp put_variants(manifest), do: manifest
+  defp put_variants(manifest), do: %{manifest | variants: []}
 
   # Filters the parsed M3ULines for audio renditions. Each one is then parsed
   # into an HLS.Media struct and placed back onto the Manifest struct.
