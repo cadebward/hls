@@ -1,7 +1,7 @@
 defmodule Hls.MixProject do
   use Mix.Project
 
-  @version "0.0.1-dev"
+  @version "0.0.1"
   @url "https://github.com/cadebward/hls"
 
   def project do

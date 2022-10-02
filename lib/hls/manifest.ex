@@ -69,7 +69,7 @@ defmodule HLS.Manifest do
     %{manifest | audio_renditions: renditions}
   end
 
-  defp put_audio_renditions(manifest), do: manifest
+  defp put_audio_renditions(manifest), do: %{manifest | audio_renditions: []}
 
   # Filters the parsed M3ULines for subtitle renditions. Each one is then parsed
   # into an HLS.Media struct and placed back onto the Manifest struct.
@@ -82,7 +82,7 @@ defmodule HLS.Manifest do
     %{manifest | subtitle_renditions: renditions}
   end
 
-  defp put_subtitle_renditions(manifest), do: manifest
+  defp put_subtitle_renditions(manifest), do: %{manifest | subtitle_renditions: []}
 
   defp put_segments(%{type: type, lines: lines} = manifest) when type not in [:master] do
     segments =

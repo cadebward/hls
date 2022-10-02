@@ -3,12 +3,14 @@ defmodule HLS.Serializers.M3U8 do
 
   EEx.function_from_file(:def, :render, "templates/m3u8.eex", [:assigns], trim: true)
 
-  defp insert_header(%HLS.Manifest{version: version, independent_segments: true}) do
+  defp insert_header(%HLS.Manifest{version: version} = manifest) do
     """
     #EXTM3U
     #EXT-X-VERSION:#{version}
-    #EXT-X-INDEPENDENT-SEGMENTS
     """
+    |> maybe_insert_independent_segments(manifest)
+    |> maybe_insert_target_duration(manifest)
+    |> maybe_insert_playlist_type(manifest)
   end
 
   defp insert_header(%HLS.Manifest{version: version, independent_segments: _}) do
@@ -17,6 +19,25 @@ defmodule HLS.Serializers.M3U8 do
     #EXT-X-VERSION:#{version}
     """
   end
+
+  defp maybe_insert_independent_segments(content, %HLS.Manifest{independent_segments: true}) do
+    content <> "\n#EXT-X-INDEPENDENT-SEGMENTS"
+  end
+
+  defp maybe_insert_independent_segments(content, _), do: content
+
+  defp maybe_insert_target_duration(content, %HLS.Manifest{target_duration: duration})
+       when is_integer(duration) do
+    content <> "\n#EXT-X-TARGETDURATION:#{duration}"
+  end
+
+  defp maybe_insert_target_duration(content, _), do: content
+
+  defp maybe_insert_playlist_type(content, %HLS.Manifest{type: :vod}) do
+    content <> "\n#EXT-X-PLAYLIST-TYPE:VOD"
+  end
+
+  defp maybe_insert_playlist_type(content, _), do: content
 
   defp insert_variant_streams(%HLS.Manifest{variants: variants}) do
     for variant <- variants do
@@ -39,6 +60,22 @@ defmodule HLS.Serializers.M3U8 do
     end
   end
 
-  defp insert_end_tag(%HLS.Manifest{type: :vod}), do: "#EXT-END"
+  defp insert_extinf_tags(%HLS.Manifest{segments: segments}) do
+    for segment <- segments do
+      duration =
+        if floor(segment.duration) == segment.duration do
+          floor(segment.duration)
+        else
+          segment.duration
+        end
+
+      """
+      #EXTINF:#{duration},#{segment.title}
+      #{segment.uri}
+      """
+    end
+  end
+
+  defp insert_end_tag(%HLS.Manifest{type: :vod}), do: "#EXT-X-ENDLIST"
   defp insert_end_tag(%HLS.Manifest{type: _}), do: ""
 end
