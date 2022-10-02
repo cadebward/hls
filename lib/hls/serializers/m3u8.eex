@@ -1,0 +1,7 @@
+<%= insert_header(@manifest) %><%= if @manifest.type == :master do %>
+  <%= insert_variant_streams(@manifest) %>
+  <%= insert_audio_renditions(@manifest) %>
+  <%= insert_subtitle_renditions(@manifest) %>
+<% else %>
+    <%= insert_extinf_tags(@manifest) %><% end %>
+<%= insert_end_tag(@manifest) %>

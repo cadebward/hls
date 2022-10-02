@@ -1,7 +1,7 @@
 defmodule HLS.Serializers.M3U8 do
   require EEx
 
-  EEx.function_from_file(:def, :render, "templates/m3u8.eex", [:assigns], trim: true)
+  EEx.function_from_file(:def, :render, "lib/hls/serializers/m3u8.eex", [:assigns], trim: true)
 
   defp insert_header(%HLS.Manifest{version: version} = manifest) do
     """
