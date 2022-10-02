@@ -286,4 +286,23 @@ defmodule HLSTest do
     m3u8 = HLS.serialize(result)
     assert trim_manifest(m3u8) == trim_manifest(playlist)
   end
+
+  test "parses mux vod manifest" do
+    playlist = """
+    #EXTM3U
+    #EXT-X-VERSION:3
+    #EXT-X-TARGETDURATION:6
+    #EXT-X-PLAYLIST-TYPE:VOD
+    #EXTINF:5,
+    https://chunk-gcp-us-east1-vop1.cfcdn.mux.com/v1/chunk/VlA7jHpLxGeVZBFgB02JgJv3RaifnajkFNru802kdY025L500iIqBhy938PIs5zJndf4EycAbX5Atjx2Q6q5n00PIBWPNFbDSa1ggxSoOv00T014pU/0.ts?skid=default&signature=NjMzZGZlNjBfNjNjNDM4OGFlNTUxNjc1NDE4ZTRkMGIxZTExZmMwYjcwOGY0M2RlNDM3ZDZkNWQyMzdjYjdjYWRhZTI4MWEyNA==
+    #EXTINF:4.588800000000006,
+    https://chunk-gcp-us-east1-vop1.cfcdn.mux.com/v1/chunk/sRyi2yvtzqpMaDeDpyGkDbHPlDwtz502rgyks01dtn01r00XU0001zRyoD5oOBBsFqnBDMLH1NBiPiSoT00ATx4oNFgMLG602nbN9SbmjQr72Dp7LGs/15.ts?skid=default&signature=NjMzZGZlNjBfOGEyZDQ0MWFhMDNlM2EzODhkM2Y5NWUxMGMzZTlmM2IwMjgyNzEwOGYxNjE3NzViNDI1ODM5MGFjNDc3ZDEyZQ==
+    #EXT-X-ENDLIST
+    """
+
+    result = HLS.parse(playlist)
+    m3u8 = HLS.serialize(result)
+
+    assert trim_manifest(m3u8) == trim_manifest(playlist)
+  end
 end
