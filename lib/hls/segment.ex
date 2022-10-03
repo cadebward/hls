@@ -17,21 +17,23 @@ defmodule HLS.Segment do
     :title,
     :discontinuity,
     :byte_range,
-    :program_date,
+    :program_date_time,
     :bit_rate
   ]
 
   def build(lines) do
+    # TODO should have helper functions for retrieving these tags
     extinf = Enum.find(lines, &(&1.tag_name == "EXTINF"))
     uri = Enum.find(lines, &(&1.type == :uri))
+    prog_date_time = Enum.find(lines, &(&1.tag_name == "EXT-X-PROGRAM-DATE-TIME"))
 
     %__MODULE__{
       uri: uri.value,
       duration: HLS.M3ULine.get_float_attribute(extinf, "value"),
       title: HLS.M3ULine.get_attribute(extinf, "title"),
       discontinuity: Enum.any?(lines, &(&1.tag_name == "EXT-X-DISCONTINUITY")),
+      program_date_time: HLS.M3ULine.get_attribute(prog_date_time, "value"),
       byte_range: "TODO",
-      program_date: "TODO",
       bit_rate: "TODO"
     }
   end

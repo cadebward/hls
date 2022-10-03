@@ -73,7 +73,16 @@ defmodule HLS.Serializers.M3U8 do
       #EXTINF:#{duration},#{segment.title}
       #{segment.uri}
       """
+      |> maybe_prepend_program_date_time(segment)
     end
+  end
+
+  defp maybe_prepend_program_date_time(string, %HLS.Segment{program_date_time: nil}) do
+    string
+  end
+
+  defp maybe_prepend_program_date_time(string, %HLS.Segment{program_date_time: date}) do
+    "#EXT-X-PROGRAM-DATE-TIME:#{date}\n" <> string
   end
 
   defp insert_end_tag(%HLS.Manifest{type: :vod}), do: "#EXT-X-ENDLIST"

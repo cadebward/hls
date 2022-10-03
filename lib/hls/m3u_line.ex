@@ -12,8 +12,10 @@ defmodule HLS.M3ULine do
   ]
 
   @tag_pattern ~r/#(?:-X-)?([^:]+):?(.*)$/
-  @kv_tags ~w(EXTINF EXT-X-TARGETDURATION EXT-X-MEDIA-SEQUENCE EXT-X-VERSION EXT-X-DISCONTINUITY-SEQUENCE EXT-X-PLAYLIST-TYPE)
-  @segment_tags ~w(EXTINF EXT-X-BYTERANGE EXT-X-DISCONTINUITY EXT-X-KEY EXT-X-MAP EXT-X-PROGRAM-DATE-TIME EXT-X-DATERANGE)
+
+  # kv_tags are tags that come in pairs, like #EXT-X-VERSION:4
+  @kv_tags ~w(EXTINF EXT-X-TARGETDURATION EXT-X-MEDIA-SEQUENCE EXT-X-VERSION EXT-X-DISCONTINUITY-SEQUENCE EXT-X-PLAYLIST-TYPE EXT-X-PROGRAM-DATE-TIME)
+  @segment_tags ~w(EXTINF EXT-X-BYTERANGE EXT-X-DISCONTINUITY EXT-X-KEY EXT-X-MAP EXT-X-DATERANGE EXT-X-PROGRAM-DATE-TIME)
 
   def build(raw_line) do
     case Regex.run(@tag_pattern, raw_line) do
@@ -79,10 +81,12 @@ defmodule HLS.M3ULine do
   @doc """
   Retrieves the value of the given key from the M3ULine's attributes.
   """
-  # @spec get_attribute(HLS.M3ULine.t, String.t()) :: term() | nil
+  # @spec get_attribute(HLS.M3ULine.t(), String.t()) :: any() | nil
   def get_attribute(%__MODULE__{} = line, key) do
     find_attribute(line, key)
   end
+
+  def get_attribute(nil, _key), do: nil
 
   @doc """
   Retrieves the value of the given key from the M3ULine's attributes

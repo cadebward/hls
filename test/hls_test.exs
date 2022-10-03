@@ -305,4 +305,25 @@ defmodule HLSTest do
 
     assert trim_manifest(m3u8) == trim_manifest(playlist)
   end
+
+  test "parses program date time" do
+    playlist = """
+    #EXTM3U
+    #EXT-X-VERSION:3
+    #EXT-X-TARGETDURATION:5
+    #EXT-X-PLAYLIST-TYPE:VOD
+    #EXT-X-PROGRAM-DATE-TIME:2022-09-30T00:49:07.030+00:00
+    #EXTINF:4,
+    https://chunk-gcp-us-east1-vop1.cfcdn.mux.com/v1/chunk/Rr3PtJCD7zye2tTIE7npiAYW5WfdPgdIpR01codCYr022GFR02WyYs2eKIiGlleYr8vqXt9O96E00XBGtsfLs9zMOCA8St6myWxCNyTRa5luHiw/0.ts?skid=default&signature=NjM0NDMzNzBfZDYwZDY2MmMxNjJlNzZhZjNkYjE5ZWZmOTdjZjE5NTFiZGU3MWM0ZDE2MjFkZjc2M2QwZTY1OTJmYjJjYWZhYg==
+    #EXT-X-ENDLIST
+    """
+
+    result = HLS.parse(playlist)
+    assert Enum.count(result.segments) == 1
+    segment = hd(result.segments)
+    assert segment.program_date_time == "2022-09-30T00:49:07.030+00:00"
+
+    m3u8 = HLS.serialize(result)
+    assert trim_manifest(m3u8) == trim_manifest(playlist)
+  end
 end
