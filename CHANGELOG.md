@@ -1,3 +1,7 @@
+## v0.0.4 (2022-10-17)
+
+- Add proper spacing when serializing EXT-X-MEDIA tags
+
 ## v0.0.3 (2022-10-03)
 
 - Added support for EXT-X-PROGRAM-DATE-TIME
