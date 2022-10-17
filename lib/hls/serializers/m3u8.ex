@@ -50,13 +50,13 @@ defmodule HLS.Serializers.M3U8 do
 
   defp insert_audio_renditions(%HLS.Manifest{audio_renditions: renditions}) do
     for rendition <- renditions do
-      "#EXT-X-MEDIA:#{HLS.Media.serialize_attributes(rendition)}"
+      "#EXT-X-MEDIA:#{HLS.Media.serialize_attributes(rendition)}\n"
     end
   end
 
   defp insert_subtitle_renditions(%HLS.Manifest{subtitle_renditions: renditions}) do
     for rendition <- renditions do
-      "#EXT-X-MEDIA:#{HLS.Media.serialize_attributes(rendition)}"
+      "#EXT-X-MEDIA:#{HLS.Media.serialize_attributes(rendition)}\n"
     end
   end
 

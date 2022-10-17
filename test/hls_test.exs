@@ -326,4 +326,21 @@ defmodule HLSTest do
     m3u8 = HLS.serialize(result)
     assert trim_manifest(m3u8) == trim_manifest(playlist)
   end
+
+  test "serializes multiple audio renditions" do
+    playlist = """
+    #EXTM3U
+    #EXT-X-VERSION:3
+
+
+    #EXT-X-MEDIA:TYPE=AUDIO,URI="some/path/eng.m3u8",GROUP-ID="audio-HIGH",LANGUAGE="en-US",NAME="English",DEFAULT=NO,AUTOSELECT=YES,FORCED=NO
+    #EXT-X-MEDIA:TYPE=AUDIO,URI="some/path/spn.m3u8",GROUP-ID="audio-HIGH",LANGUAGE="en-US",NAME="English",DEFAULT=NO,AUTOSELECT=YES,FORCED=NO
+    """
+
+    result = HLS.parse(playlist)
+    assert Enum.count(result.audio_renditions) == 2
+
+    m3u8 = HLS.serialize(result)
+    assert trim_manifest(m3u8) == trim_manifest(playlist)
+  end
 end
