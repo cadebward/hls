@@ -343,4 +343,22 @@ defmodule HLSTest do
     m3u8 = HLS.serialize(result)
     assert trim_manifest(m3u8) == trim_manifest(playlist)
   end
+
+  test "parses trick play master m3u8" do
+    playlist = File.read!(Path.join([__DIR__, "examples", "trick_play_master_mux.m3u8"]))
+    result = HLS.parse(playlist)
+
+    assert length(result.image_renditions) == 1
+    rendition = hd(result.image_renditions)
+    assert not is_nil(rendition.uri)
+  end
+
+  test "parses trick play image playlist m3u8" do
+    playlist = File.read!(Path.join([__DIR__, "examples", "trick_play_playlist_mux.m3u8"]))
+    result = HLS.parse(playlist)
+
+    assert length(result.segments) === 1
+    segment = hd(result.segments)
+    assert not is_nil(segment.uri)
+  end
 end

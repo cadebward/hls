@@ -60,6 +60,12 @@ defmodule HLS.Serializers.M3U8 do
     end
   end
 
+  defp insert_image_renditions(%HLS.Manifest{image_renditions: renditions}) do
+    for rendition <- renditions do
+      "#EXT-X-IMAGE-STREAM-INF:#{HLS.Media.serialize_attributes(rendition)}\n"
+    end
+  end
+
   defp insert_extinf_tags(%HLS.Manifest{segments: segments}) do
     for segment <- segments do
       duration =
