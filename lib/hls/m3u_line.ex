@@ -55,7 +55,7 @@ defmodule HLS.M3ULine do
     attributes
     |> String.split(~r/,(?=(?:[^"]|"[^"]*")*$)/)
     |> Enum.map(fn pair ->
-      [k, v] = String.split(pair, "=")
+      [k, v] = String.split(pair, "=", parts: 2)
       {k, v}
     end)
     |> Enum.into(%{})
@@ -168,6 +168,16 @@ defmodule HLS.M3ULine do
   end
 
   def subtitle_tag_line?(_line), do: false
+
+  @doc """
+  Returns true if the provided M3ULine is an EXT-X-IMAGE-STREAM-INF tag,
+    used for trick play
+  """
+  def image_stream_line?(%__MODULE__{} = line) do
+    line.tag_name === "EXT-X-IMAGE-STREAM-INF"
+  end
+
+  def image_stream_line?(_), do: false
 
   @doc """
   Returns true if the provided M3ULine is a segment tag.
