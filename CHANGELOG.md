@@ -1,3 +1,7 @@
+## v0.0.5 (2022-11-10)
+
+- Add support for EXT-X-IMAGE-STREAM-INF (@omginbd)
+
 ## v0.0.4 (2022-10-17)
 
 - Add proper spacing when serializing EXT-X-MEDIA tags
