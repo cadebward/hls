@@ -18,7 +18,8 @@ defmodule HLS.Manifest do
     :media_sequence,
     :discontinuity_sequence,
     :end_list,
-    :i_frames_only
+    :i_frames_only,
+    :images_only
   ]
 
   # These tags are only found in master manifests. The existence
@@ -36,7 +37,8 @@ defmodule HLS.Manifest do
       independent_segments: exists?(lines, "EXT-X-INDEPENDENT-SEGMENTS"),
       start: "TODO",
       end_list: exists?(lines, "EXT-X-ENDLIST"),
-      i_frames_only: exists?(lines, "EXT-X-I-FRAMES-ONLY")
+      i_frames_only: exists?(lines, "EXT-X-I-FRAMES-ONLY"),
+      images_only: exists?(lines, "EXT-X-IMAGES-ONLY")
     }
     |> put_variants()
     |> put_audio_renditions()
@@ -89,7 +91,7 @@ defmodule HLS.Manifest do
     renditions =
       lines
       |> Enum.filter(&HLS.M3ULine.image_stream_line?/1)
-      |> Enum.map(&HLS.Media.build/1)
+      |> Enum.map(&HLS.ImageStreamInf.build/1)
 
     %{manifest | image_renditions: renditions}
   end
@@ -138,8 +140,15 @@ defmodule HLS.Manifest do
   defp find_int(lines, tag_name, default \\ nil) do
     with %{value: value} <- Enum.find(lines, &(&1.tag_name == tag_name)) do
       case Integer.parse(value) do
-        :error -> default
-        {integer, _remainder} -> integer
+        {num, ""} ->
+          num
+
+        {_num, _remainder} ->
+          {num, ""} = Float.parse(value)
+          round(num)
+
+        :error ->
+          default
       end
     else
       _ -> default

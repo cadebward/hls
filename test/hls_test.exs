@@ -293,6 +293,7 @@ defmodule HLSTest do
     #EXT-X-VERSION:3
     #EXT-X-TARGETDURATION:6
     #EXT-X-PLAYLIST-TYPE:VOD
+
     #EXTINF:5,
     https://chunk-gcp-us-east1-vop1.cfcdn.mux.com/v1/chunk/VlA7jHpLxGeVZBFgB02JgJv3RaifnajkFNru802kdY025L500iIqBhy938PIs5zJndf4EycAbX5Atjx2Q6q5n00PIBWPNFbDSa1ggxSoOv00T014pU/0.ts?skid=default&signature=NjMzZGZlNjBfNjNjNDM4OGFlNTUxNjc1NDE4ZTRkMGIxZTExZmMwYjcwOGY0M2RlNDM3ZDZkNWQyMzdjYjdjYWRhZTI4MWEyNA==
     #EXTINF:4.588800000000006,
@@ -313,6 +314,7 @@ defmodule HLSTest do
     #EXT-X-TARGETDURATION:5
     #EXT-X-PLAYLIST-TYPE:VOD
     #EXT-X-PROGRAM-DATE-TIME:2022-09-30T00:49:07.030+00:00
+
     #EXTINF:4,
     https://chunk-gcp-us-east1-vop1.cfcdn.mux.com/v1/chunk/Rr3PtJCD7zye2tTIE7npiAYW5WfdPgdIpR01codCYr022GFR02WyYs2eKIiGlleYr8vqXt9O96E00XBGtsfLs9zMOCA8St6myWxCNyTRa5luHiw/0.ts?skid=default&signature=NjM0NDMzNzBfZDYwZDY2MmMxNjJlNzZhZjNkYjE5ZWZmOTdjZjE5NTFiZGU3MWM0ZDE2MjFkZjc2M2QwZTY1OTJmYjJjYWZhYg==
     #EXT-X-ENDLIST
@@ -341,6 +343,25 @@ defmodule HLSTest do
     assert Enum.count(result.audio_renditions) == 2
 
     m3u8 = HLS.serialize(result)
+    assert trim_manifest(m3u8) == trim_manifest(playlist)
+  end
+
+  test "serializes simple trick play m3u8" do
+    playlist = """
+    #EXTM3U
+    #EXT-X-VERSION:7
+    #EXT-X-MEDIA-SEQUENCE:0
+    #EXT-X-IMAGES-ONLY
+    #EXT-X-TARGETDURATION:1
+    #EXT-X-PLAYLIST-TYPE:VOD
+
+    #EXTINF:30.073,
+    #EXT-X-TILES:RESOLUTION=284x160,LAYOUT=5x7,DURATION=0.970
+    https://image.mux.com/YcYYGioMNCwEUtqQo02EvxiihxZd7YwM2/storyboard.jpg
+    #EXT-X-ENDLIST
+    """
+
+    m3u8 = playlist |> HLS.parse() |> HLS.serialize()
     assert trim_manifest(m3u8) == trim_manifest(playlist)
   end
 
