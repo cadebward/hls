@@ -8,6 +8,9 @@ defmodule HLS.Serializers.M3U8 do
     #EXTM3U
     #EXT-X-VERSION:#{version}
     """
+    |> String.trim()
+    |> maybe_insert_media_sequence(manifest)
+    |> maybe_insert_images_only(manifest)
     |> maybe_insert_independent_segments(manifest)
     |> maybe_insert_target_duration(manifest)
     |> maybe_insert_playlist_type(manifest)
@@ -19,6 +22,18 @@ defmodule HLS.Serializers.M3U8 do
     #EXT-X-VERSION:#{version}
     """
   end
+
+  defp maybe_insert_media_sequence(content, %HLS.Manifest{media_sequence: nil}), do: content
+
+  defp maybe_insert_media_sequence(content, %HLS.Manifest{media_sequence: media_sequence}) do
+    content <> "\n#EXT-X-MEDIA-SEQUENCE:#{media_sequence}"
+  end
+
+  defp maybe_insert_images_only(content, %HLS.Manifest{images_only: true}) do
+    content <> "\n#EXT-X-IMAGES-ONLY"
+  end
+
+  defp maybe_insert_images_only(content, _manifest), do: content
 
   defp maybe_insert_independent_segments(content, %HLS.Manifest{independent_segments: true}) do
     content <> "\n#EXT-X-INDEPENDENT-SEGMENTS"
@@ -62,7 +77,7 @@ defmodule HLS.Serializers.M3U8 do
 
   defp insert_image_renditions(%HLS.Manifest{image_renditions: renditions}) do
     for rendition <- renditions do
-      "#EXT-X-IMAGE-STREAM-INF:#{HLS.Media.serialize_attributes(rendition)}\n"
+      "#EXT-X-IMAGE-STREAM-INF:#{HLS.ImageStreamInf.serialize_attributes(rendition)}\n"
     end
   end
 
@@ -75,12 +90,17 @@ defmodule HLS.Serializers.M3U8 do
           segment.duration
         end
 
-      """
-      #EXTINF:#{duration},#{segment.title}
-      #{segment.uri}
-      """
+      "#EXTINF:#{duration},#{segment.title}\n"
+      |> maybe_insert_tiles(segment)
+      |> then(&(&1 <> "#{segment.uri}\n"))
       |> maybe_prepend_program_date_time(segment)
     end
+  end
+
+  defp maybe_insert_tiles(content, %HLS.Segment{tiles: nil}), do: content
+
+  defp maybe_insert_tiles(content, %HLS.Segment{tiles: %HLS.Segment.Tiles{} = tiles}) do
+    content <> "#{HLS.Segment.Tiles.serialize(tiles)}\n"
   end
 
   defp maybe_prepend_program_date_time(string, %HLS.Segment{program_date_time: nil}) do

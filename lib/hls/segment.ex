@@ -18,7 +18,8 @@ defmodule HLS.Segment do
     :discontinuity,
     :byte_range,
     :program_date_time,
-    :bit_rate
+    :bit_rate,
+    :tiles
   ]
 
   def build(lines) do
@@ -26,6 +27,12 @@ defmodule HLS.Segment do
     extinf = Enum.find(lines, &(&1.tag_name == "EXTINF"))
     uri = Enum.find(lines, &(&1.type == :uri))
     prog_date_time = Enum.find(lines, &(&1.tag_name == "EXT-X-PROGRAM-DATE-TIME"))
+    tiles_line = Enum.find(lines, &(&1.tag_name === "EXT-X-TILES"))
+
+    tiles =
+      if tiles_line do
+        HLS.Segment.Tiles.build(tiles_line)
+      end
 
     %__MODULE__{
       uri: uri.value,
@@ -34,7 +41,8 @@ defmodule HLS.Segment do
       discontinuity: Enum.any?(lines, &(&1.tag_name == "EXT-X-DISCONTINUITY")),
       program_date_time: HLS.M3ULine.get_attribute(prog_date_time, "value"),
       byte_range: "TODO",
-      bit_rate: "TODO"
+      bit_rate: "TODO",
+      tiles: tiles
     }
   end
 
