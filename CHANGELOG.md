@@ -1,3 +1,7 @@
+## v0.0.6 (2022-11-14)
+
+- Fixes parsing and serialization for EXT-X-IMAGE-STREAM-INF (@omginbd)
+
 ## v0.0.5 (2022-11-10)
 
 - Add support for EXT-X-IMAGE-STREAM-INF (@omginbd)
