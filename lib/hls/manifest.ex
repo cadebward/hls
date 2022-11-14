@@ -31,7 +31,7 @@ defmodule HLS.Manifest do
       type: get_manifest_type(lines),
       lines: lines,
       version: find_int(lines, "EXT-X-VERSION"),
-      target_duration: lines |> find_int("EXT-X-TARGETDURATION"),
+      target_duration: find_int(lines, "EXT-X-TARGETDURATION"),
       media_sequence: find_int(lines, "EXT-X-MEDIA-SEQUENCE"),
       discontinuity_sequence: find_int(lines, "EXT-X-DISCONTINUITY-SEQUENCE"),
       independent_segments: exists?(lines, "EXT-X-INDEPENDENT-SEGMENTS"),
