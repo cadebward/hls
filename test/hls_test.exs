@@ -102,7 +102,7 @@ defmodule HLSTest do
 
   test "builds variant list correctly" do
     master_playlist = """
-    #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=240000,RESOLUTION=396x224
+    #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=240000,RESOLUTION=396x224,FRAME-RATE=24.000
     media.m3u8
     """
 
@@ -114,6 +114,7 @@ defmodule HLSTest do
     assert variant.bandwidth == 240_000
     assert variant.codecs == nil
     assert variant.resolution == "396x224"
+    assert variant.frame_rate == "24.000"
     assert variant.uri == "media.m3u8"
 
     master_playlist = """
