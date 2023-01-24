@@ -18,7 +18,8 @@ defmodule HLS.Variant do
     :codecs,
     :resolution,
     :audio,
-    :subtitles
+    :subtitles,
+    :frame_rate,
   ]
 
   def build(lines) do
@@ -44,7 +45,8 @@ defmodule HLS.Variant do
       codecs: HLS.M3ULine.get_attribute(tag_line, "codecs"),
       resolution: HLS.M3ULine.get_attribute(tag_line, "resolution"),
       audio: HLS.M3ULine.get_attribute(tag_line, "audio"),
-      subtitles: HLS.M3ULine.get_attribute(tag_line, "subtitles")
+      subtitles: HLS.M3ULine.get_attribute(tag_line, "subtitles"),
+      frame_rate: HLS.M3ULine.get_attribute(tag_line, "frame-rate")
     }
   end
 
