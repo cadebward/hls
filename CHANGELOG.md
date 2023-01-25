@@ -1,3 +1,7 @@
+## v0.0.7 (2023-01-24)
+
+- Add missing frame rate attribute (PR #5) (@ddresselhaus)
+
 ## v0.0.6 (2022-11-14)
 
 - Fixes parsing and serialization for EXT-X-IMAGE-STREAM-INF (@omginbd)

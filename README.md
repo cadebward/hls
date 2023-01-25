@@ -36,7 +36,7 @@ Add `hls` to your list of dependencies in `mix.exs`.
 ```elixir
 def deps do
   [
-    {:hls, "~> 0.0.6"}
+    {:hls, "~> 0.0.7"}
   ]
 end
 ```
