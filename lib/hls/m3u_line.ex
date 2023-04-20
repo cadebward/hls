@@ -62,7 +62,7 @@ defmodule HLS.M3ULine do
   end
 
   @doc """
-  Checks the existance of the provide key, and that it matches the provide value.
+  Checks the existence of the provide key, and that it matches the provide value.
 
   ## Example
 

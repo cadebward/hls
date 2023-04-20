@@ -1,6 +1,6 @@
 # HLS
 
-[Online Documenation](https://hexdocs.pm/hls).
+[Online Documentation](https://hexdocs.pm/hls).
 
 <!-- MDOC !-->
 
