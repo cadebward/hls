@@ -124,7 +124,7 @@ defmodule HLS.Manifest do
     end
   end
 
-  # If EXT-X-ENDLIST exsts, the manifest represents a VOD,
+  # If EXT-X-ENDLIST exists, the manifest represents a VOD,
   # otherwise it must be live.
   defp get_vod_type(lines) do
     if Enum.any?(lines, &(&1.tag_name == "EXT-X-ENDLIST")) do
