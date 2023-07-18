@@ -1,3 +1,8 @@
+## v0.0.8 (2023-07-18)
+
+- handle `EXT-X-ALLOW-CACHE` tag in hls playlist (#7) (@rajrajhans)
+- remove deprecated Logger.warn
+
 ## v0.0.7 (2023-01-24)
 
 - Add missing frame rate attribute (PR #5) (@ddresselhaus)
