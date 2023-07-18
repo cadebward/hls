@@ -27,7 +27,7 @@ defmodule HLS.Variant do
     uri = Enum.find(lines, &(&1.type == :uri))
 
     if Enum.count(lines) > 2 do
-      Logger.warn("Encountered more than two lines in variant. Unknown situation")
+      Logger.warning("Encountered more than two lines in variant. Unknown situation")
     end
 
     if tag_line == nil or uri == nil do
