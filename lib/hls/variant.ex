@@ -17,9 +17,11 @@ defmodule HLS.Variant do
     :average_bandwidth,
     :codecs,
     :resolution,
+    :resolution_width,
+    :resolution_height,
     :audio,
     :subtitles,
-    :frame_rate,
+    :frame_rate
   ]
 
   def build(lines) do
@@ -38,12 +40,16 @@ defmodule HLS.Variant do
       """
     end
 
+    {resolution_width, resolution_height} = HLS.M3ULine.parse_resolution(tag_line, "resolution")
+
     %__MODULE__{
       uri: uri.value,
       bandwidth: HLS.M3ULine.get_integer_attribute(tag_line, "bandwidth"),
       average_bandwidth: HLS.M3ULine.get_attribute(tag_line, "average-bandwidth"),
       codecs: HLS.M3ULine.get_attribute(tag_line, "codecs"),
       resolution: HLS.M3ULine.get_attribute(tag_line, "resolution"),
+      resolution_width: resolution_width,
+      resolution_height: resolution_height,
       audio: HLS.M3ULine.get_attribute(tag_line, "audio"),
       subtitles: HLS.M3ULine.get_attribute(tag_line, "subtitles"),
       frame_rate: HLS.M3ULine.get_attribute(tag_line, "frame-rate")

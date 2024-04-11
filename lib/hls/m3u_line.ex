@@ -143,6 +143,30 @@ defmodule HLS.M3ULine do
   end
 
   @doc """
+  Parses a resolution string under the given attr on the line struct. Returns a
+  tuple of {width, height}, as integers.
+
+  Expects a string at the given attr to look like 111x111.
+  """
+  def parse_resolution(%__MODULE__{} = line, attr) do
+    case get_attribute(line, attr) do
+      nil ->
+        {0, 0}
+
+      resolution_string ->
+        [width, height] = String.split(resolution_string, "x")
+        {resolution_to_integer(width), resolution_to_integer(height)}
+    end
+  end
+
+  defp resolution_to_integer(resolution_string) do
+    case Integer.parse(resolution_string) do
+      {integer, _} -> integer
+      _error -> 0
+    end
+  end
+
+  @doc """
   Returns true if the provided M3ULine is a variant tag.
   """
   def variant_tag_line?(%{tag_name: tag}) when tag in ["EXT-X-STREAM-INF"] do
