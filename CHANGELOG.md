@@ -1,3 +1,8 @@
+## v0.0.9 (2024-04-11)
+
+- add `resolution_width` and `resolution_height` to the variant struct as parsed integers
+- replace usage of `Kernel.then`
+
 ## v0.0.8 (2023-07-18)
 
 - handle `EXT-X-ALLOW-CACHE` tag in hls playlist (#7) (@rajrajhans)
