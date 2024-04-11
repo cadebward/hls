@@ -36,10 +36,14 @@ defmodule HLS.Segment.Tiles do
     end)
     |> Enum.reverse()
     |> Enum.join(",")
-    |> then(&"##{@tag_name}:#{&1}")
+    |> append_tag()
   end
 
   defp serialize_attribute(key, value) do
     "#{key |> to_string() |> String.upcase()}=#{value}"
+  end
+
+  defp append_tag(line_string) do
+    "##{@tag_name}:#{line_string}"
   end
 end
