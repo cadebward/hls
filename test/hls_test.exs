@@ -341,7 +341,6 @@ defmodule HLSTest do
     #EXTM3U
     #EXT-X-VERSION:3
 
-
     #EXT-X-MEDIA:TYPE=AUDIO,URI="some/path/eng.m3u8",GROUP-ID="audio-HIGH",LANGUAGE="en-US",NAME="English",DEFAULT=NO,AUTOSELECT=YES,FORCED=NO
     #EXT-X-MEDIA:TYPE=AUDIO,URI="some/path/spn.m3u8",GROUP-ID="audio-HIGH",LANGUAGE="en-US",NAME="English",DEFAULT=NO,AUTOSELECT=YES,FORCED=NO
     """
@@ -388,5 +387,27 @@ defmodule HLSTest do
     assert length(result.segments) === 1
     segment = hd(result.segments)
     assert not is_nil(segment.uri)
+  end
+
+  test "serializes apple trick play playlist" do
+    playlist = File.read!(Path.join([__DIR__, "examples", "apple_trick_play_playlist.m3u8"]))
+
+    m3u8 =
+      playlist
+      |> HLS.parse()
+      |> HLS.serialize()
+
+    assert trim_manifest(m3u8) == trim_manifest(playlist)
+  end
+
+  test "serializes apple trick play master" do
+    playlist = File.read!(Path.join([__DIR__, "examples", "apple_trick_play_master.m3u8"]))
+
+    m3u8 =
+      playlist
+      |> HLS.parse()
+      |> HLS.serialize()
+
+    assert trim_manifest(m3u8) == trim_manifest(playlist)
   end
 end

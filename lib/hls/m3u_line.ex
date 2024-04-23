@@ -14,7 +14,7 @@ defmodule HLS.M3ULine do
   @tag_pattern ~r/#(?:-X-)?([^:]+):?(.*)$/
 
   # kv_tags are tags that come in pairs, like #EXT-X-VERSION:4
-  @kv_tags ~w(EXTINF EXT-X-TARGETDURATION EXT-X-MEDIA-SEQUENCE EXT-X-VERSION EXT-X-DISCONTINUITY-SEQUENCE EXT-X-PLAYLIST-TYPE EXT-X-PROGRAM-DATE-TIME EXT-X-ALLOW-CACHE)
+  @kv_tags ~w(EXTINF EXT-X-TARGETDURATION EXT-X-MEDIA-SEQUENCE EXT-X-VERSION EXT-X-DISCONTINUITY-SEQUENCE EXT-X-PLAYLIST-TYPE EXT-X-PROGRAM-DATE-TIME EXT-X-ALLOW-CACHE EXT-X-BYTERANGE)
   @segment_tags ~w(EXTINF EXT-X-BYTERANGE EXT-X-DISCONTINUITY EXT-X-KEY EXT-X-MAP EXT-X-DATERANGE EXT-X-PROGRAM-DATE-TIME EXT-X-TILES)
 
   def build(raw_line) do
@@ -45,10 +45,6 @@ defmodule HLS.M3ULine do
   # these tags come in key value pairs, like #EXT-X-VERSION:4
   defp parse_attributes(tag, value) when tag in @kv_tags do
     %{"VALUE" => value}
-  end
-
-  defp parse_attributes("EXT-X-BYTERANGE", _byte_range) do
-    %{}
   end
 
   defp parse_attributes(_tag, attributes) do
@@ -202,6 +198,16 @@ defmodule HLS.M3ULine do
   end
 
   def image_stream_line?(_), do: false
+
+  @doc """
+  Returns true if the provided M3ULine is an EXT-X-IMAGE-STREAM-INF tag,
+    used for trick play
+  """
+  def i_frame_stream_line?(%__MODULE__{} = line) do
+    line.tag_name === "EXT-X-I-FRAME-STREAM-INF"
+  end
+
+  def i_frame_stream_line?(_), do: false
 
   @doc """
   Returns true if the provided M3ULine is a segment tag.

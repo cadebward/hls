@@ -44,6 +44,7 @@ defmodule HLS.Manifest do
     |> put_audio_renditions()
     |> put_subtitle_renditions()
     |> put_image_renditions()
+    |> put_i_frame_renditions()
     |> put_segments()
   end
 
@@ -97,6 +98,17 @@ defmodule HLS.Manifest do
   end
 
   defp put_image_renditions(manifest), do: %{manifest | image_renditions: []}
+
+  defp put_i_frame_renditions(%{type: :master, lines: lines} = manifest) do
+    renditions =
+      lines
+      |> Enum.filter(&HLS.M3ULine.i_frame_stream_line?/1)
+      |> Enum.map(&HLS.IFrameStreamInf.build/1)
+
+    %{manifest | i_frame_renditions: renditions}
+  end
+
+  defp put_i_frame_renditions(manifest), do: %{manifest | image_renditions: []}
 
   defp put_segments(%{type: type, lines: lines} = manifest) when type not in [:master] do
     segments =
