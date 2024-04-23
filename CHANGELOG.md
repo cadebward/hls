@@ -1,3 +1,8 @@
+## v0.0.10 (2024-04-23)
+
+- add support for byte_range
+- add support for EXT-X-I-FRAME-STREAM-INF
+
 ## v0.0.9 (2024-04-11)
 
 - add `resolution_width` and `resolution_height` to the variant struct as parsed integers
