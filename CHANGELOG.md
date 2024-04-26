@@ -1,3 +1,7 @@
+## v0.0.11 (2024-04-26)
+
+- add support for CHANNELS attribute on X-STREAM-INF tags
+
 ## v0.0.10 (2024-04-23)
 
 - add support for byte_range
