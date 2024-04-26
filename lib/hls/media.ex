@@ -17,10 +17,25 @@ defmodule HLS.Media do
     :language,
     :default,
     :autoselect,
-    :forced
+    :forced,
+    :channels
   ]
 
-  def build(%HLS.M3ULine{} = line) do
+  def build_audio(%HLS.M3ULine{} = line) do
+    %__MODULE__{
+      name: HLS.M3ULine.get_attribute(line, "name"),
+      type: HLS.M3ULine.get_attribute(line, "type"),
+      uri: HLS.M3ULine.get_attribute(line, "uri"),
+      group_id: HLS.M3ULine.get_attribute(line, "group-id"),
+      language: HLS.M3ULine.get_attribute(line, "language"),
+      default: HLS.M3ULine.get_boolean_attribute(line, "default"),
+      autoselect: HLS.M3ULine.get_boolean_attribute(line, "autoselect"),
+      forced: HLS.M3ULine.get_boolean_attribute(line, "forced"),
+      channels: HLS.M3ULine.get_attribute(line, "channels") |> maybe_parse_int()
+    }
+  end
+
+  def build_subtitle(%HLS.M3ULine{} = line) do
     %__MODULE__{
       name: HLS.M3ULine.get_attribute(line, "name"),
       type: HLS.M3ULine.get_attribute(line, "type"),
@@ -31,6 +46,15 @@ defmodule HLS.Media do
       autoselect: HLS.M3ULine.get_boolean_attribute(line, "autoselect"),
       forced: HLS.M3ULine.get_boolean_attribute(line, "forced")
     }
+  end
+
+  defp maybe_parse_int(nil), do: nil
+
+  defp maybe_parse_int(value) do
+    case Integer.parse(value) do
+      {int, _remainder} -> int
+      _error_or_zero -> 0
+    end
   end
 
   @doc """

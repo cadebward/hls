@@ -68,7 +68,7 @@ defmodule HLS.Manifest do
     renditions =
       lines
       |> Enum.filter(&HLS.M3ULine.audio_tag_line?/1)
-      |> Enum.map(&HLS.Media.build/1)
+      |> Enum.map(&HLS.Media.build_audio/1)
 
     %{manifest | audio_renditions: renditions}
   end
@@ -81,7 +81,7 @@ defmodule HLS.Manifest do
     renditions =
       lines
       |> Enum.filter(&HLS.M3ULine.subtitle_tag_line?/1)
-      |> Enum.map(&HLS.Media.build/1)
+      |> Enum.map(&HLS.Media.build_subtitle/1)
 
     %{manifest | subtitle_renditions: renditions}
   end
