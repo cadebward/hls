@@ -1,3 +1,7 @@
+## v0.0.12 (2024-07-19)
+
+- add parsing of resolution_width and resolution_height on i-frame structs
+
 ## v0.0.11 (2024-04-26)
 
 - add support for CHANNELS attribute on X-STREAM-INF tags
