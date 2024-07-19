@@ -22,14 +22,18 @@ defmodule HLS.IFrameStreamInf do
   # required, but makes things more consistent and easier to test.
   @attribute_order ~w(average_bandwidth bandwidth codecs resolution uri)a
 
-  defstruct ~w(average_bandwidth bandwidth codecs resolution uri)a
+  defstruct ~w(average_bandwidth bandwidth codecs resolution resolution_width resolution_height uri)a
 
   def build(%HLS.M3ULine{} = line) do
+    {resolution_width, resolution_height} = HLS.M3ULine.parse_resolution(line, "resolution")
+
     %__MODULE__{
       uri: HLS.M3ULine.get_attribute(line, "uri"),
       bandwidth: HLS.M3ULine.get_integer_attribute(line, "bandwidth"),
       codecs: HLS.M3ULine.get_attribute(line, "codecs"),
       resolution: HLS.M3ULine.get_attribute(line, "resolution"),
+      resolution_width: resolution_width,
+      resolution_height: resolution_height,
       average_bandwidth: HLS.M3ULine.get_attribute(line, "average-bandwidth")
     }
   end

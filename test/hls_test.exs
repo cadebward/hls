@@ -156,6 +156,7 @@ defmodule HLSTest do
     #EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud",LANGUAGE="spa",NAME="Spanish",AUTOSELECT=YES,DEFAULT=NO,URI="audio/spa/The_Chosen_S01E01_audio_spa_20211108_134000.m3u8"
     #EXT-X-MEDIA:TYPE=SUBTITLES,AUTOSELECT=YES,DEFAULT=NO,FORCED=NO,GROUP-ID="subs",LANGUAGE="en",NAME="English",URI="subtitles/eng/The_Chosen_S01E01_eng.m3u8"
     #EXT-X-STREAM-INF:BANDWIDTH=739200,RESOLUTION=480x270,CODECS="avc1.640015,mp4a.40.2",AUDIO="aud",SUBTITLES="subs"
+    #EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=246620,BANDWIDTH=915255,CODECS="hvc1.1.6.L150.b0",RESOLUTION=3840x2160,URI="some/path/goes/here"
     video/CHO_EP101_Angel-thechosen_270p.m3u8
     """
 
@@ -189,6 +190,16 @@ defmodule HLSTest do
     assert sub.name == "English"
     assert sub.type == "SUBTITLES"
     assert sub.uri == "subtitles/eng/The_Chosen_S01E01_eng.m3u8"
+
+    assert Enum.count(result.i_frame_renditions) == 1
+    frame = hd(result.i_frame_renditions)
+    assert frame.average_bandwidth == "246620"
+    assert frame.bandwidth == 915_255
+    assert frame.codecs == "hvc1.1.6.L150.b0"
+    assert frame.resolution == "3840x2160"
+    assert frame.resolution_width == 3840
+    assert frame.resolution_height == 2160
+    assert frame.uri == "some/path/goes/here"
   end
 
   test "media playlist for variant track parses correctly" do
