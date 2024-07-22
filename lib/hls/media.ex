@@ -18,6 +18,7 @@ defmodule HLS.Media do
     :default,
     :autoselect,
     :forced,
+    :characteristics,
     :channels
   ]
 
@@ -31,6 +32,7 @@ defmodule HLS.Media do
       default: HLS.M3ULine.get_boolean_attribute(line, "default"),
       autoselect: HLS.M3ULine.get_boolean_attribute(line, "autoselect"),
       forced: HLS.M3ULine.get_boolean_attribute(line, "forced"),
+      characteristics: HLS.M3ULine.get_attribute(line, "characteristics"),
       channels: HLS.M3ULine.get_attribute(line, "channels") |> maybe_parse_int()
     }
   end
