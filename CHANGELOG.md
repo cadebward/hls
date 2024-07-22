@@ -1,3 +1,7 @@
+## v0.0.13 (2024-07-22)
+
+- add CHARACTERISTICS attribute
+
 ## v0.0.12 (2024-07-19)
 
 - add parsing of resolution_width and resolution_height on i-frame structs
