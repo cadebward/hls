@@ -46,6 +46,7 @@ defmodule HLSTest do
     #EXTINF:10,	
     #EXT-X-BYTERANGE:522828@0
     hls_450k_video.ts
+    #ZEN-TOTAL-DURATION:1621.07780
     """
 
     result = HLS.parse(media_playlist)
