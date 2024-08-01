@@ -1,3 +1,7 @@
+## v0.0.14 (2024-08-01)
+
+- ignore unknown tags when parsing m3u8 manifest. Previously we would attempt to parse everything, but we made assumptions it was formatted as key=value. When this assumption was incorrect, parsing would blow up.
+
 ## v0.0.13 (2024-07-22)
 
 - add CHARACTERISTICS attribute
