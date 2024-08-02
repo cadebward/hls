@@ -47,18 +47,19 @@ defmodule HLS.M3ULine do
     %{"VALUE" => value}
   end
 
-  defp parse_attributes(tag, attributes) when tag in @segment_tags do
-    attributes
-    |> String.split(~r/,(?=(?:[^"]|"[^"]*")*$)/)
-    |> Enum.map(fn pair ->
-      [k, v] = String.split(pair, "=", parts: 2)
-      {k, v}
-    end)
-    |> Enum.into(%{})
+  defp parse_attributes(_tag, attributes) do
+    if String.contains?(attributes, ["=", ","]) do
+      attributes
+      |> String.split(~r/,(?=(?:[^"]|"[^"]*")*$)/)
+      |> Enum.map(fn pair ->
+        [k, v] = String.split(pair, "=", parts: 2)
+        {k, v}
+      end)
+      |> Enum.into(%{})
+    else
+      %{}
+    end
   end
-
-  # If not a valid tag, ignore
-  defp parse_attributes(_tag, _value), do: %{}
 
   @doc """
   Checks the existence of the provide key, and that it matches the provide value.

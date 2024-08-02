@@ -150,6 +150,53 @@ defmodule HLSTest do
     assert variant.uri == "media.m3u8"
   end
 
+  test "parses many audio, video, and i-frame lines" do
+    playlist = """
+    #EXTM3U
+    #EXT-X-VERSION:7
+    #EXT-X-INDEPENDENT-SEGMENTS
+
+    #EXT-X-STREAM-INF:BANDWIDTH=1,AVERAGE-BANDWIDTH=1,CODECS="avc1.4d001f,avc1.4d001f",RESOLUTION=1280x720,FRAME-RATE=24.9,AUDIO="stereo"
+    domain/some/path
+
+    #EXT-X-STREAM-INF:BANDWIDTH=1,AVERAGE-BANDWIDTH=1,CODECS="avc1.4d001f,avc1.4d001f",RESOLUTION=1920x1080,FRAME-RATE=24.9,AUDIO="stereo"
+    domain/some/path
+
+    #EXT-X-STREAM-INF:BANDWIDTH=1,AVERAGE-BANDWIDTH=1,CODECS="avc1.4d001f,avc1.4d001f",RESOLUTION=1280x720,FRAME-RATE=24.9,AUDIO="surround"
+    domain/some/path
+
+    #EXT-X-STREAM-INF:BANDWIDTH=1,AVERAGE-BANDWIDTH=1,CODECS="avc1.4d001f,avc1.4d001f",RESOLUTION=1920x1080,FRAME-RATE=24.9,AUDIO="surround"
+    domain/some/path
+
+    #EXT-X-MEDIA:TYPE=AUDIO,URI="domain/some/path",GROUP-ID="stereo",LANGUAGE="us0",NAME="English",CHANNELS="2"
+
+    #EXT-X-MEDIA:TYPE=AUDIO,URI="domain/some/path",GROUP-ID="surround",LANGUAGE="us0",NAME="English",CHANNELS="6"
+
+    #EXT-X-MEDIA:TYPE=AUDIO,URI="domain/some/path",GROUP-ID="stereo",LANGUAGE="us0",NAME="English [Audio Description]",CHARACTERISTICS="public.accessibility.describes-video",CHANNELS="2"
+
+    #EXT-X-MEDIA:TYPE=AUDIO,URI="domain/some/path",GROUP-ID="surround",LANGUAGE="us0",NAME="English [Audio Description]",CHARACTERISTICS="public.accessibility.describes-video",CHANNELS="6"
+
+    #EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=1,BANDWIDTH=1,CODECS="avc1.4d001f",RESOLUTION=1280x720,URI="domain/some/path"
+    #EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=1,BANDWIDTH=1,CODECS="avc1.4d001f",RESOLUTION=1920x1080,URI="domain/some/path"
+    #EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=1,BANDWIDTH=1,CODECS="hev1.1.0.H60.b0",RESOLUTION=1280x720,URI="domain/some/path"
+    #EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=1,BANDWIDTH=1,CODECS="hev1.1.0.H60.b0",RESOLUTION=1920x1080,URI="domain/some/path"
+    """
+
+    result = HLS.parse(playlist)
+
+    assert Enum.count(result.variants) == 4
+    assert Enum.count(result.audio_renditions) == 4
+    assert Enum.count(result.i_frame_renditions) == 4
+
+    iframe = hd(result.i_frame_renditions)
+    assert iframe.average_bandwidth == 1
+    assert iframe.bandwidth == 1
+    assert iframe.codecs == "avc1.4d001f"
+    assert iframe.resolution_width == 1280
+    assert iframe.resolution_height == 720
+    assert iframe.uri == "domain/some/path"
+  end
+
   test "one of everything" do
     playlist = """
     #EXTM3U

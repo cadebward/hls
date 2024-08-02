@@ -20,7 +20,7 @@ defmodule HLS.IFrameStreamInf do
 
   # This defines the order, as specified in the RFC. Its not strictly
   # required, but makes things more consistent and easier to test.
-  @attribute_order ~w(average_bandwidth bandwidth codecs resolution uri)a
+  @attribute_order ~w(bandwidth average_bandwidth codecs resolution uri)a
 
   defstruct ~w(average_bandwidth bandwidth codecs resolution resolution_width resolution_height uri)a
 
