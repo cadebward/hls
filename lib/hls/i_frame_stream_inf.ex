@@ -34,7 +34,7 @@ defmodule HLS.IFrameStreamInf do
       resolution: HLS.M3ULine.get_attribute(line, "resolution"),
       resolution_width: resolution_width,
       resolution_height: resolution_height,
-      average_bandwidth: HLS.M3ULine.get_attribute(line, "average-bandwidth")
+      average_bandwidth: HLS.M3ULine.get_integer_attribute(line, "average-bandwidth")
     }
   end
 

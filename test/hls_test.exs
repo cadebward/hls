@@ -195,7 +195,7 @@ defmodule HLSTest do
 
     assert Enum.count(result.i_frame_renditions) == 1
     frame = hd(result.i_frame_renditions)
-    assert frame.average_bandwidth == "246620"
+    assert frame.average_bandwidth == 246_620
     assert frame.bandwidth == 915_255
     assert frame.codecs == "hvc1.1.6.L150.b0"
     assert frame.resolution == "3840x2160"
