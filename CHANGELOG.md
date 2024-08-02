@@ -1,3 +1,8 @@
+## v0.1.0 (2024-08-02)
+
+- BACKWARD INCOMPATIBLE CHANGE: `AVERAGE-BANDWIDTH` is now parsed as an integer. Previously parsed as a string.
+- Fixed an issue introduced in 0.0.14 where many attributes would fail to parse, resulting in `nil` values.
+
 ## v0.0.14 (2024-08-01)
 
 - ignore unknown tags when parsing m3u8 manifest. Previously we would attempt to parse everything, but we made assumptions it was formatted as key=value. When this assumption was incorrect, parsing would blow up.
