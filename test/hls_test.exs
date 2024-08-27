@@ -111,7 +111,7 @@ defmodule HLSTest do
     assert Enum.count(result.variants) == 1
 
     variant = hd(result.variants)
-    assert variant.average_bandwidth == nil
+    assert variant.average_bandwidth == 0
     assert variant.bandwidth == 240_000
     assert variant.codecs == nil
     assert variant.resolution == "396x224"
@@ -132,7 +132,7 @@ defmodule HLSTest do
     assert Enum.count(result.variants) == 2
 
     variant = Enum.at(result.variants, 0)
-    assert variant.average_bandwidth == nil
+    assert variant.average_bandwidth == 0
     assert variant.bandwidth == 240_000
     assert variant.codecs == nil
     assert variant.resolution == "396x224"
@@ -141,7 +141,7 @@ defmodule HLSTest do
     assert variant.uri == "media.m3u8"
 
     variant = Enum.at(result.variants, 1)
-    assert variant.average_bandwidth == nil
+    assert variant.average_bandwidth == 0
     assert variant.bandwidth == 240_000
     assert variant.codecs == nil
     assert variant.resolution == "396x224"
@@ -212,7 +212,7 @@ defmodule HLSTest do
 
     assert Enum.count(result.variants) == 1
     variant = hd(result.variants)
-    assert variant.average_bandwidth == nil
+    assert variant.average_bandwidth == 0
     assert variant.bandwidth == 739_200
     assert variant.resolution == "480x270"
     assert variant.codecs == "avc1.640015,mp4a.40.2"

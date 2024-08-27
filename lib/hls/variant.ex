@@ -45,7 +45,7 @@ defmodule HLS.Variant do
     %__MODULE__{
       uri: uri.value,
       bandwidth: HLS.M3ULine.get_integer_attribute(tag_line, "bandwidth"),
-      average_bandwidth: HLS.M3ULine.get_attribute(tag_line, "average-bandwidth"),
+      average_bandwidth: HLS.M3ULine.get_integer_attribute(tag_line, "average-bandwidth"),
       codecs: HLS.M3ULine.get_attribute(tag_line, "codecs"),
       resolution: HLS.M3ULine.get_attribute(tag_line, "resolution"),
       resolution_width: resolution_width,
@@ -83,7 +83,9 @@ defmodule HLS.Variant do
   defp do_serialize_attributes(attribute_map) do
     @attribute_order
     |> Enum.reduce([], fn key, acc ->
-      if value = Map.get(attribute_map, key) do
+      value = Map.get(attribute_map, key)
+
+      if should_render_attribute?(value) do
         acc ++ [serialize_attribute(key, value)]
       else
         acc
@@ -98,4 +100,9 @@ defmodule HLS.Variant do
     |> String.upcase()
     |> String.replace("_", "-")
   end
+
+  defp should_render_attribute?(nil), do: false
+  defp should_render_attribute?(0), do: false
+  defp should_render_attribute?(""), do: false
+  defp should_render_attribute?(_), do: true
 end
