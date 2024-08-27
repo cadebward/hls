@@ -1,3 +1,7 @@
+## v0.1.1 (2024-08-27)
+
+- `AVERAGE-BANDWIDTH` _inside of the variant struct_ was still being parsed as a string. It is now parsed as an integer. Computers are so hard. Please forgive me.
+
 ## v0.1.0 (2024-08-02)
 
 - BACKWARD INCOMPATIBLE CHANGE: `AVERAGE-BANDWIDTH` is now parsed as an integer. Previously parsed as a string.
