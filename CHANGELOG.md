@@ -1,3 +1,7 @@
+## v0.1.3 (2024-10-03)
+
+ - `EXT-X-MAP` is now serialized on playlist files
+
 ## v0.1.2 (2024-10-03)
 
  - `EXT-X-MAP` is now parsed on playlist files.
