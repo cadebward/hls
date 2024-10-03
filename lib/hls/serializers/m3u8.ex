@@ -50,8 +50,6 @@ defmodule HLS.Serializers.M3U8 do
       end)
       |> Enum.join(",")
 
-    dbg(serialized_attrs)
-
     content <> "\n#EXT-X-MAP:#{serialized_attrs}"
   end
 

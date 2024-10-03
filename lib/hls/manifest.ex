@@ -65,14 +65,6 @@ defmodule HLS.Manifest do
       _ ->
         manifest
     end
-
-    # if exists?(lines, "EXT-X-MAP") do
-    #   dbg(lines)
-    #   x_map_attributes = []
-    #   %{manifest | x_map: x_map_attributes}
-    # else
-    #   manifest
-    # end
   end
 
   # Loops over the lines and chunks the related lines together into a list. Each

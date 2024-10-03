@@ -489,7 +489,6 @@ defmodule HLSTest do
       """
 
     result = HLS.parse(playlist)
-    dbg(result)
     assert result.x_map == [{"URI", "init.mp4"}]
   end
 
