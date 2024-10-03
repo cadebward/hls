@@ -12,7 +12,8 @@ defmodule Hls.MixProject do
       name: "HLS",
       description: "A simple and fast parser for HLS manifests.",
       aliases: [docs: &build_docs/1],
-      package: package()
+      package: package(),
+      deps: deps()
     ]
   end
 
@@ -32,6 +33,12 @@ defmodule Hls.MixProject do
         "Changelog" => "#{@url}/blob/master/CHANGELOG.md"
       }
     }
+  end
+
+  defp deps do
+    [
+      {:mix_test_watch, "~> 1.2", only: [:dev, :test], runtime: false}
+    ]
   end
 
   defp build_docs(_) do

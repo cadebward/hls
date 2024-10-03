@@ -19,7 +19,8 @@ defmodule HLS.Manifest do
     :discontinuity_sequence,
     :end_list,
     :i_frames_only,
-    :images_only
+    :images_only,
+    :x_map
   ]
 
   # These tags are only found in master manifests. The existence
@@ -46,6 +47,32 @@ defmodule HLS.Manifest do
     |> put_image_renditions()
     |> put_i_frame_renditions()
     |> put_segments()
+    |> put_x_map(lines)
+  end
+
+  defp put_x_map(manifest, lines) do
+    lines
+    |> Enum.find(lines, &(&1.tag_name == "EXT-X-MAP"))
+    |> case do
+      %{attributes: attributes} ->
+        x_map_attributes =
+          for {key, value} <- attributes do
+            {key, value}
+          end
+
+        %{manifest | x_map: x_map_attributes}
+
+      _ ->
+        manifest
+    end
+
+    # if exists?(lines, "EXT-X-MAP") do
+    #   dbg(lines)
+    #   x_map_attributes = []
+    #   %{manifest | x_map: x_map_attributes}
+    # else
+    #   manifest
+    # end
   end
 
   # Loops over the lines and chunks the related lines together into a list. Each

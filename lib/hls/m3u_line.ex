@@ -53,7 +53,7 @@ defmodule HLS.M3ULine do
       |> String.split(~r/,(?=(?:[^"]|"[^"]*")*$)/)
       |> Enum.map(fn pair ->
         [k, v] = String.split(pair, "=", parts: 2)
-        {k, v}
+        {k, String.replace(v, "\"", "")}
       end)
       |> Enum.into(%{})
     else

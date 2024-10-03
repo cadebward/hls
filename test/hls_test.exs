@@ -470,4 +470,26 @@ defmodule HLSTest do
 
     assert trim_manifest(m3u8) == trim_manifest(playlist)
   end
+
+  test "parses EXT-X-MAP field" do
+    playlist =
+      """
+      #EXTM3U
+      #EXT-X-VERSION:7
+      #EXT-X-PLAYLIST-TYPE:VOD
+      #EXT-X-INDEPENDENT-SEGMENTS
+      #EXT-X-TARGETDURATION:5
+      #EXT-X-MEDIA-SEQUENCE:0
+      #EXT-X-MAP:URI="init.mp4"
+      #EXTINF:4.992000,
+      seg-1.m4s
+      #EXTINF:4.992000,
+      seg-2.m4s
+      #EXT-X-ENDLIST
+      """
+
+    result = HLS.parse(playlist)
+    dbg(result.x_map)
+    assert result.x_map == [{"URI", "init.mp4"}]
+  end
 end
