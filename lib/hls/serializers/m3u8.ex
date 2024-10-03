@@ -10,6 +10,7 @@ defmodule HLS.Serializers.M3U8 do
     |> String.trim()
     |> maybe_insert_version(manifest)
     |> maybe_insert_media_sequence(manifest)
+    |> maybe_insert_x_map(manifest)
     |> maybe_insert_images_only(manifest)
     |> maybe_insert_independent_segments(manifest)
     |> maybe_insert_target_duration(manifest)
@@ -36,6 +37,22 @@ defmodule HLS.Serializers.M3U8 do
 
   defp maybe_insert_media_sequence(content, %HLS.Manifest{media_sequence: media_sequence}) do
     content <> "\n#EXT-X-MEDIA-SEQUENCE:#{media_sequence}"
+  end
+
+  defp maybe_insert_x_map(content, %HLS.Manifest{x_map: nil}), do: content
+  defp maybe_insert_x_map(content, %HLS.Manifest{x_map: []}), do: content
+
+  defp maybe_insert_x_map(content, %HLS.Manifest{x_map: attributes}) do
+    serialized_attrs =
+      attributes
+      |> Enum.map(fn {key, value} ->
+        "#{key}=\"#{value}\""
+      end)
+      |> Enum.join(",")
+
+    dbg(serialized_attrs)
+
+    content <> "\n#EXT-X-MAP:#{serialized_attrs}"
   end
 
   defp maybe_insert_images_only(content, %HLS.Manifest{images_only: true}) do
