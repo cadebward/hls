@@ -1,3 +1,7 @@
+## v0.1.4 (2024-10-29)
+
+- `TARGET-DURATION` can now be serialized from any type.
+
 ## v0.1.3 (2024-10-03)
 
  - `EXT-X-MAP` is now serialized on playlist files
