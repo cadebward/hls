@@ -517,4 +517,38 @@ defmodule HLSTest do
 
     assert m3u8.x_map == [{"URI", "init.mp4"}]
   end
+
+  test "serializes any type of target_duration" do
+    assert %HLS.Manifest{
+             segments: [],
+             target_duration: 5
+           }
+           |> HLS.serialize()
+           |> HLS.parse()
+           |> Map.get(:target_duration) == 5
+
+    assert %HLS.Manifest{
+             segments: [],
+             target_duration: "5"
+           }
+           |> HLS.serialize()
+           |> HLS.parse()
+           |> Map.get(:target_duration) == 5
+
+    assert %HLS.Manifest{
+             segments: [],
+             target_duration: "5.0"
+           }
+           |> HLS.serialize()
+           |> HLS.parse()
+           |> Map.get(:target_duration) == 5
+
+    assert %HLS.Manifest{
+             segments: [],
+             target_duration: "5.05"
+           }
+           |> HLS.serialize()
+           |> HLS.parse()
+           |> Map.get(:target_duration) == 5
+  end
 end

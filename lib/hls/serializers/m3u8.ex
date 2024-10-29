@@ -65,8 +65,9 @@ defmodule HLS.Serializers.M3U8 do
 
   defp maybe_insert_independent_segments(content, _), do: content
 
-  defp maybe_insert_target_duration(content, %HLS.Manifest{target_duration: duration})
-       when is_integer(duration) do
+  defp maybe_insert_target_duration(content, %HLS.Manifest{target_duration: nil}), do: content
+
+  defp maybe_insert_target_duration(content, %HLS.Manifest{target_duration: duration}) do
     content <> "\n#EXT-X-TARGETDURATION:#{duration}"
   end
 
